@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
     <% include ./partials/_headers %>
   </head>
   <body>
-    <h2>URLS</h2>
+    <h2 style="padding:20px";>URLS</h2>
     <ul>
       <% for (url in urls) { %>
-        <li><%= url %> - <%= urls[url]  %></li>
+        <li><%= url %> &rArr; <%= urls[url]  %></li>
+        <form method="POST" action=<%= "/urls/"+ url + "/delete"%>>
+          <input type="submit" value="DELETE">
+        </form>
       <% }; %>
     </ul>
-    <h3>URL shortening</h3>
-    <li href = '#'>not yet</li>
+    <h2>URL shortening</h2>
+    <li href = '#'>new URL</li>
   </body>
 </html>

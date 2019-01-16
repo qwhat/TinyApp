@@ -22,6 +22,13 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
+
+app.post("/urls/:id/delete", (req, res) => {
+  let urlId = req.params.id
+  delete urlDatabase[req.params.id]
+  res.redirect("/urls")
+});
+
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
@@ -43,6 +50,7 @@ app.get("/urls/:id", (req, res) => {
 
   res.render("urls_show", templateVars);
 });
+
 
 app.post("/urls", (req, res) => {
   let longURL = req.body.longURL
