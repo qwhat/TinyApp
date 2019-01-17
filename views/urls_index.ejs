@@ -5,16 +5,19 @@
     <% include ./partials/_headers %>
   </head>
   <body>
-    <h2 style="padding:20px";>URLS</h2>
+    <h2>URLS</h2>
     <ul>
       <% for (url in urls) { %>
-        <li><%= url %> &rArr; <%= urls[url]  %></li>
-        <form method="POST" action=<%= "/urls/"+ url + "/delete"%>>
-          <input type="submit" value="DELETE">
+        <%= url %> &rArr; <a href= <%= urls[url]  %>><%= urls[url]  %></a>
+        <form action="/urls/<%= url %>" method="get">
+          <input type="submit" value="edit">
+        </form>
+        <form method="POST" action=<%= "/urls/" + url + "/delete"%>>
+          <input type="submit" value= &#9940;>
         </form>
       <% }; %>
     </ul>
     <h2>URL shortening</h2>
-    <li href = '#'>new URL</li>
+      <p>new URL</p>
   </body>
 </html>
