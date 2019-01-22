@@ -1,11 +1,26 @@
+<!DOCTYPE html>
 <meta charset="UTF-8">
 <title>Tiny App</title>
-
+<header>
+  <head>
+    <% if (username) { %>
+        <h2><%= username %></h2>
+        <form action= "/logout" method="POST"">
+            <input type="submit" value="Log Out"> <!--logout button -->
+    </form>
+    <% } else { %>
+        <form action= "/login" method="POST"">
+            <input id="username" type="text" name="username">
+            <input type="submit" value="Log In"> <!--login button -->
+        </form>
+    <% } %>
+  </head>
 <!-- CSS (load bootstrap from a CDN) -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<style>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <style>
     body    {
       text-align: center;
       padding-top:350px;
     }
-</style>
+  </style>
+</header>
