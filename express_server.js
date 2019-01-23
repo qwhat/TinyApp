@@ -61,7 +61,11 @@ app.get("/urls/new", (req, res) => {
     user: req.cookies["user_id"],
     urls: urlDatabase
   };
-  res.render("urls_new", templateVars);
+  if (req.cookies["user_id"]) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
