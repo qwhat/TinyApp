@@ -3,15 +3,17 @@
 <title>Tiny App</title>
 <header>
   <head>
-    <% if (username) { %>
-        <h2><%= username %></h2>
-        <form action= "/logout" method="POST"">
-            <input type="submit" value="Log Out"> <!--logout button -->
+    <% if (user) { %>
+        <h2><%= user %></h2>
+        <form action= "/logout" method="POST">
+            <input type="submit" value="Log Out">
     </form>
     <% } else { %>
-        <form action= "/login" method="POST"">
-            <input id="username" type="text" name="username">
-            <input type="submit" value="Log In"> <!--login button -->
+        <form action= "/login" method="get">
+            <input type="submit" value="Log In">
+        </form>
+        <form action= "/register" method="get">
+            <input type="submit" value="Sign Up">
         </form>
     <% } %>
   </head>
@@ -20,7 +22,8 @@
   <style>
     body    {
       text-align: center;
-      padding-top:350px;
+      padding-top: 250px;
+
     }
   </style>
 </header>
