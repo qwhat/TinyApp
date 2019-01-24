@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <% include ./partials/_headers %>
+    <% include partials/_headers %>
   </head>
   <body>
     <h2>URLS</h2>
     <ul>
       <% for (url in urls) { %>
-        <%= url %> &rArr; <a href= <%= urls[url]  %>><%= urls[url]  %></a>
+        <%= url %> &rArr; <a href= <%= urls[url].longURL  %>><%= urls[url].longURL  %></a>
         <form action="/urls/<%= url %>" method="get">
           <input type="submit" value="edit">
         </form>
         <form method="POST" action=<%= "/urls/" + url + "/delete"%>>
           <input type="submit" value= &#9940;>
         </form>
-      <% }; %>
+      <% } %>
     </ul>
-    <h2>URL shortening</h2>
-      <p>new URL</p>
+  </body>
+  <body>
+    <h2>Create a New Short Link</h2>
+    <form action= "/urls/new" method="get">
+      <input type="submit" value="NEW URL">
+    </form>
   </body>
 </html>

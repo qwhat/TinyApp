@@ -2,11 +2,17 @@
 <html lang="en">
   <head>
     <% include partials/_headers %>
+  </head>
   <body>
-    <h2>ShortURL:<%= shortURL %></h2>
+    <h2>ShortURL: <%= shortURL %></h2>
     <form method="POST" action="/urls/<%= shortURL %>">
       <input id="longURL" name="longURL" type="text" value="<%= longURL %>" style="width: 300px" >
       <input type="submit" value="Update">
+    </form>
+  </body>
+  <body>
+    <form action="/urls" method="get">
+      <input type="submit" value="Home">
     </form>
   </body>
 </html>
