@@ -4,14 +4,14 @@
     <% include partials/_headers %>
   </head>
   <body>
-    <h2>ShortURL: <%= shortURL %></h2>
-    <form method="POST" action="/urls/<%= shortURL %>">
+    <h2 style="padding-top: 50px">ShortURL: <%= shortURL %></h2>
+    <form method="POST" action="/urls/<%= shortURL %>" style="padding-top: 25px">
       <input id="longURL" name="longURL" type="text" value="<%= longURL %>" style="width: 300px" >
       <input type="submit" value="Update">
     </form>
   </body>
   <body>
-    <form action="/urls" method="get">
+    <form action="/urls" method="get" style="padding-top:50px">
       <input type="submit" value="Home">
     </form>
   </body>

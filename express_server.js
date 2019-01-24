@@ -27,11 +27,11 @@ const users = {
     password: "imBatman",
     hashedPassword:bcrypt.hashSync("imBatman", 10)
   },
- "clarkKent": {
+  "clarkKent": {
     id: "clarkKent",
     email: "superman@hotmail.com",
     password: "imSuperman",
-    hashedPassword: bcrypt.hashSync("imBatman", 10)
+    hashedPassword: bcrypt.hashSync("imSuperman", 10)
   }
 };
 
@@ -78,7 +78,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     users: users,
-    user: req.session.user_id,
+    user: users[req.session.user_id],
     urls: urlsForUser(req.session.user_id),
   };
   if (req.session.user_id) {
@@ -93,7 +93,7 @@ app.get("/urls/:id", (req, res) => {
   if (urlDatabase[req.params.id] && req.session.user_id === urlDatabase[req.params.id].userID) {
     let templateVars = {
       users: users,
-      user: req.session.user_id,
+      user: users[req.session.user_id],
       shortURL: req.params.id,
       longURL: urlDatabase[req.params.id].longURL,
       urls: urlsForUser(req.session.user_id),
@@ -166,7 +166,7 @@ app.get("/login", (req, res) => {
   } else {
     let templateVars = {
       users: users,
-      user: req.session.user_id,
+      user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
   res.render("urls_login", templateVars);
@@ -179,7 +179,7 @@ app.get("/register", (req, res) => {
   } else {
     let templateVars = {
       users: users,
-      user: req.session.user_id,
+      user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
     res.render("urls_register", templateVars);

@@ -8,10 +8,10 @@
     <ul>
       <% for (url in urls) { %>
         <%= url %> &rArr; <a href= <%= urls[url].longURL  %>><%= urls[url].longURL  %></a>
-        <form action="/urls/<%= url %>" method="get">
+        <form action="/urls/<%= url %>" method="get" style="padding-top:10px">
           <input type="submit" value="edit">
         </form>
-        <form method="POST" action=<%= "/urls/" + url + "/delete"%>>
+        <form method="POST"  style="padding-top:10px" action= <%= "/urls/" + url + "/delete"%>>
           <input type="submit" value= &#9940;>
         </form>
       <% } %>
