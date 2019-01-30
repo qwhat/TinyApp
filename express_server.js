@@ -1,26 +1,26 @@
-const express = require("express");
+const express = require("express");             // require the express node module
 const app = express();
-const PORT = 3001;
-const bodyParser = require("body-parser");
-const uuidv4 = require('uuid/v4');
-const bcrypt = require('bcrypt');
-const cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');// require the cookie session node module
+const bodyParser = require("body-parser");      // require the body parser node module
+const uuidv4 = require('uuid/v4');              // require the uuid node module
+const bcrypt = require('bcrypt');               // require the bcyprt node module
 
+const PORT = 3001;                              //declares port number where the app will run
 
-app.use(cookieSession({
+app.use(cookieSession({                         //encrypts the cookie values
   name: 'session',
-  keys: ['key1', 'key2']
+  keys: ['key1', 'key2']                        //these are very easy keys but will do for this project
 }));
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.listen(PORT, () => {
+app.listen(PORT, () => {                        //logs the port when the server is started
   console.log(`tinyApp listening on port ${PORT}`);
 });
 
-const users = {
+const users = {                                 //hardcoded user database
   "bruceWayne": {
     id: "bruceWayne",
     email: "batman@hotmail.com",
@@ -35,7 +35,7 @@ const users = {
   }
 };
 
-const urlDatabase = {
+const urlDatabase = {                           //hardcoded url database
   "b2xVn2": {
     userID: "bruceWayne",
     shortURL: "b2xVn2",
@@ -54,43 +54,43 @@ const urlDatabase = {
 };
 
 
-app.get("/", (req, res) => {
-  if (req.session.user_id) {
-    res.redirect("/urls");
-  } else {
-    res.redirect("/login");
+app.get("/", (req, res) => {                                                                    //gets the "/" page(just a redirect)
+  if (req.session.user_id) {                                                                    //if the app detects our cookie
+    res.redirect("/urls");                                                                      //redirect the user to their url page
+  } else {                                                                                      //otherwise
+    res.redirect("/login");                                                                     //redirect them to the login page
   }
 });
 
-app.get("/urls", (req, res) => {
+app.get("/urls", (req, res) => {                                                                //gets the urls_index.ejs "home" page
   if (req.session.user_id) {
-    let templateVars = {
+    let templateVars = {                                                                        //declares an object that pulls the information from our cookie
       users: users,
       user: users[req.session.user_id],
-      urls: urlsForUser(req.session.user_id),
+      urls: urlsForUser(req.session.user_id),                                                   //assigns the result of a function to urls, see below for the associated function
     }
-    res.render("urls_index", templateVars);
-  } else {
+    res.render("urls_index", templateVars);                                                     //displays our urls_index.ejs file and gives it access to our templateVars object
+  } else {                                                                                      //gives the proper error message if the user is not logged in
     res.status(403).send('<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>');
   }
 });
 
-app.get("/urls/new", (req, res) => {
+app.get("/urls/new", (req, res) => {                                                            //gets the urls_new.ejs page to create new shortURLS
   let templateVars = {
     users: users,
     user: users[req.session.user_id],
     urls: urlsForUser(req.session.user_id),
   };
   if (req.session.user_id) {
-    res.render("urls_new", templateVars);
+    res.render("urls_new", templateVars);                                                       //displays our urls_new.ejs file and gives it access to our templateVars object
   } else {
-    res.redirect("/login");
+    res.redirect("/login");                                                                     //the project requirements want this to be the only page that redirects to login instead of giving an error message
   }
 });
 
-app.get("/urls/:id", (req, res) => {
+app.get("/urls/:id", (req, res) => {                                                            //gets the urls_show.ejs page, :id is equal to whatever shortURL comes after /urls/ in the address bar,
 
-  if (urlDatabase[req.params.id] && req.session.user_id === urlDatabase[req.params.id].userID) {
+  if (urlDatabase[req.params.id] && req.session.user_id === urlDatabase[req.params.id].userID) {//checks if shortURL exists in our database AND if it belongs to the current user
     let templateVars = {
       users: users,
       user: users[req.session.user_id],
@@ -98,127 +98,127 @@ app.get("/urls/:id", (req, res) => {
       longURL: urlDatabase[req.params.id].longURL,
       urls: urlsForUser(req.session.user_id),
     };
-    res.render("urls_show", templateVars);
-  } else if (!urlDatabase[req.params.id]){
-    res.status(404).send('Error 404: Page does not exist');
-  }  else if (req.session.user_id && req.session.user_id !== urlDatabase[req.params.id].userID){
-    res.status(403).send('Error 403: You do not have access to this page!');
+    res.render("urls_show", templateVars);                                                      //shows the urls_show.ejs page associated to the shortURL and gives it acces to the templateVars object
+  } else if (!urlDatabase[req.params.id]){                                                      //checks if the shortURL does NOT exist in our database
+    res.status(404).send('Error 404: Page does not exist');                                     //error message for if the shortURL does not exist
+  }  else if (req.session.user_id && req.session.user_id !== urlDatabase[req.params.id].userID){//checks if the shortURL exists AND does NOT belong to the current user
+    res.status(403).send('Error 403: You do not have access to this page!');                    //error message for if the shortURL does not belong to the current user
   } else if (!req.session.user_id){
     res.status(403).send('<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>');
-  } else {
-    res.status(500).send('Error 500: Great, you broke it.');
+  } else {                                                                                      //if somehow,user does not satisfy ANY of the above conditions
+    res.status(500).send('Error 500: Great, you broke it.');                                    //return appropriate error message
   }
 });
 
-app.get("/u/:id", (req, res) => {
-  if (!urlDatabase[req.params.id]) {
+app.get("/u/:id", (req, res) => {                                                               //gets the /u/:id page (which is a redirect)
+  if (!urlDatabase[req.params.id]) {                                                            //checks if shortURL does NOT exist in our database
     res.status(404).send('Error 404: Page does not exist');
   } else {
-    let longURL = urlDatabase[req.params.id].longURL;
-    res.redirect(longURL);
+    let longURL = urlDatabase[req.params.id].longURL;                                           //just declaring a variable so that the code is easier to read
+    res.redirect(longURL);                                                                      //redirects ANY user to the actual page associated to the longURL
   }
 });
 
 app.post("/urls", (req, res) => {
   if (req.session.user_id) {
     let longURL = req.body.longURL;
-    let id = generateRandomString();
+    let id = generateRandomString();                                                            //does what the name says, see function below to see exactly what it does
     let userID = req.session.user_id;
-    let newURL = {
+    let newURL = {                                                                              //creates new user with the variables defined above
       "userID": userID,
       "shortURL": id,
       "longURL": longURL,
     };
-    urlDatabase[id] = newURL;
-    res.redirect('/urls/' + id);
+    urlDatabase[id] = newURL;                                                                   //adds the new url to the url database
+    res.redirect('/urls/' + id);                                                                //brings you to the urls_show.ejs associated to the new shortURL
   } else {
     res.status(403).send('<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>');
   }
 });
 
-app.post("/urls/:id", (req, res) => {
-  if (req.session.user_id === urlDatabase[req.params.id].userID) {
-    let longURL = req.body.longURL;
-    let shortURL = req.params.id;
-    urlDatabase[shortURL].longURL = longURL
-    res.redirect("/urls");
-  } else if (!req.session.user_id){
+app.post("/urls/:id", (req, res) => {                                                           //edit the longURL
+  if (req.session.user_id === urlDatabase[req.params.id].userID) {                              //checks if current user is associated to the shortURL
+    let longURL = req.body.longURL;                                                             //assigns a variable to the text in the textarea of the urls_show.ejs form
+    let shortURL = req.params.id;                                                               //assigns a temporary variable to the shortURL in the address bar
+    urlDatabase[shortURL].longURL = longURL                                                     //assigns the new edited longURL to the shortURL from the address bar
+    res.redirect("/urls");                                                                      //redirects the user to the "home" page
+  } else if (!req.session.user_id){                                                             //checks if not logged in
     res.status(403).send('<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>');
-  } else {
+  } else {                                                                                      //checks if user does NOT own the shortURL
     res.status(403).send('Error 403: You do not have access to this page!');
   }
 });
 
-app.post("/urls/:id/delete", (req, res) => {
+app.post("/urls/:id/delete", (req, res) => {                                                    //delete the url and all its keys from the database
   if (req.session.user_id === urlDatabase[req.params.id].userID) {
-    delete urlDatabase[req.params.id]
-    res.redirect("/urls");
-  } else if (!req.session.user_id){
+    delete urlDatabase[req.params.id]                                                           //deletes the shortURL object and all its keys from urlDatabase
+    res.redirect("/urls");                                                                      //then "refreshes" the page
+  } else if (!req.session.user_id){                                                             //checks if user is logged in
     res.status(403).send('<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>');
-  } else {
+  } else {                                                                                      //otherwise (if the user is logged in but does not own the url)
     res.status(403).send('Error 403: You do not have access to this page!');
   }
 });
 
-app.get("/login", (req, res) => {
-  if (req.session.user_id) {
-    res.redirect("/urls");
+app.get("/login", (req, res) => {                                                               //gets the login page
+  if (req.session.user_id) {                                                                    //if the user is already logged in
+    res.redirect("/urls");                                                                      //bring them to the "home" page
   } else {
     let templateVars = {
       users: users,
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
-  res.render("urls_login", templateVars);
+  res.render("urls_login", templateVars);                                                       //display the urls_login.ejs page and let it access the templateVars object
   }
 });
 
-app.get("/register", (req, res) => {
-  if (req.session.user_id) {
-    res.redirect("/urls");
+app.get("/register", (req, res) => {                                                            //gets the register page
+  if (req.session.user_id) {                                                                    //if the user is already logged in
+    res.redirect("/urls");                                                                      //bring them to the "home" page
   } else {
     let templateVars = {
       users: users,
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
-    res.render("urls_register", templateVars);
+    res.render("urls_register", templateVars);                                                  //display the urls_register.ejs page and let it access the templateVars object
   }
 });
 
-app.post("/login", (req, res) => {
-  let email = req.body.email;
-  let password = req.body.password;
-  let loginID = signInCheck(email, password);
-  if (loginID) {
-    req.session.user_id = loginID;
+app.post("/login", (req, res) => {                                                              //executes when the form on the "/login" page is submitted
+  let email = req.body.email;                                                                   //pulls email from the form
+  let password = req.body.password;                                                             //pulls the password from the form
+  let loginID = signInCheck(email, password);                                                   //declares variable (boolean) associated to a function defined below with 2 arguments
+  if (loginID) {                                                                                //if boolean is true
+    req.session.user_id = loginID;                                                              //set the cookie for this user
     res.redirect('/urls');
-  } else {
-    res.status(403).send('Error 403 Email or Password do not match');
+  } else {                                                                                      //otherwise
+    res.status(403).send('Error 403 Email or Password do not match');                           //return appropriate error message
   }
 });
 
-app.post("/register", (req, res) => {
-  let email = req.body.email;
-  let password = req.body.password;
-  let ident = "user" + generateRandomString();
-  let hashedPass = bcrypt.hashSync(password, 10);
-  if (!password || !email ) {
+app.post("/register", (req, res) => {                                                           //executes when form is submitted on the "/register" page
+  let email = req.body.email;                                                                   //pulls email from the form
+  let password = req.body.password;                                                             //pulls password from the form
+  let ident = "user" + generateRandomString();                                                  //assigns a random "id" to the user with function defined below
+  let hashedPass = bcrypt.hashSync(password, 10);                                               //hashes the given password to make it harder to "hack"
+  if (!password || !email ) {                                                                   //checks if one of the text areas are blank
      res.status(400);
      res.send('Empty form');
-   } else if (uniqueEmail(email) === false) {
+   } else if (uniqueEmail(email) === false) {                                                   //checks if email already exists with function defined below
      res.status(400);
      res.send('Email in use!');
    } else {
-     const newUser = {
+     const newUser = {                                                                          //declares a new user object
        id: ident,
        email: email,
        password: password,
        hashedPassword: hashedPass
      };
-     users[ident] = newUser;
-     req.session.user_id = ident;
-     res.redirect(`/urls`);
+     users[ident] = newUser;                                                                    //adds the new registered user to the user database
+     req.session.user_id = ident;                                                               //assigns cookie for this user
+     res.redirect(`/urls`);                                                                     //brings user to the "home" page
    }
 });
 
