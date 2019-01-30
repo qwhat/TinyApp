@@ -1,15 +1,16 @@
 <!DOCTYPE html>
+<!-- HTML for the login page -->
 <html lang="en">
   <head>
-    <% include partials/_headers %>
+    <% include partials/_headers %> <!-- applies the html from _headers.ejs here -->
   </head>
   <body>
     <h2>LOGIN</h2>
-    <form method="POST" action="/login">
+    <form method="POST" action="/login"> <!-- executes the app.post for login -->
       <label for="email">email: </label>
-      <input id="email" name="email" type="email">
+      <input id="email" name="email" type="email"> <!-- text area that only accepts email forms like example@example.com -->
       <label for="password"> password: </label>
-      <input id="password" name="password" type="password">
+      <input id="password" name="password" type="password"> <!-- text area that hides the characters to make password slightly more secure -->
       <input type="submit" value="Log In">
     </form>
   </body>
