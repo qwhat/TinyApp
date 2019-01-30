@@ -2,8 +2,8 @@ const express = require("express");             // require the express node modu
 const app = express();
 const cookieSession = require('cookie-session');// require the cookie session node module
 const bodyParser = require("body-parser");      // require the body parser node module
-const uuidv4 = require('uuid/v4');              // require the uuid node module
-const bcrypt = require('bcrypt');               // require the bcyprt node module
+const uuidv4 = require('uuid/v4');              // require the uuidv4 node module
+const bcrypt = require('bcrypt');               // require the bcrypt node module
 
 const PORT = 3001;                              //declares port number where the app will run
 
