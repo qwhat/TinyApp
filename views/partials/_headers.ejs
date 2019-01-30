@@ -15,10 +15,10 @@
           <input type="submit" value="Log Out">
   </form>
   <% } else { %> <!-- if user is NOT logged in this will let them register or log in -->
-      <form action= "/login" method="GET" style="padding:10px">
+      <form action= "/login" method="GET" style="padding:10px"> <!-- Button redirects to the Login page -->
           <input type="submit" value="Log In">
       </form>
-      <form action= "/register" method="GET" style="padding:10px">
+      <form action= "/register" method="GET" style="padding:10px"><!-- Button redirects to the Signup page -->
           <input type="submit" value="Sign Up">
       </form>
   <% } %>
