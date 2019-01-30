@@ -189,12 +189,12 @@ app.get("/register", (req, res) => {                                            
 app.post("/login", (req, res) => {                                                              //executes when the form on the "/login" page is submitted
   let email = req.body.email;                                                                   //pulls email from the form
   let password = req.body.password;                                                             //pulls the password from the form
-  let loginID = signInCheck(email, password);                                                   //declares variable (boolean) associated to a function defined below with 2 arguments
-  if (loginID) {                                                                                //if boolean is true
+  let loginID = signInCheck(email, password);                                                   //declares variable associated to a function defined below with 2 arguments
+  if (loginID) {                                                                                //if variable is a user(true)
     req.session.user_id = loginID;                                                              //set the cookie for this user
     res.redirect('/urls');
   } else {                                                                                      //otherwise
-    res.status(403).send('Error 403 Email or Password do not match');                           //return appropriate error message
+    res.status(403).send('Error 403 Email or Password do not match');                           //return appropriate error message (uses same error message for email and password so that it's harder to "hack")
   }
 });
 
@@ -222,39 +222,44 @@ app.post("/register", (req, res) => {                                           
    }
 });
 
-app.post("/logout", (req, res) => {
-  req.session = null;
-  res.redirect("/urls");
+app.post("/logout", (req, res) => {                                                             //executes when the logout button in the header is submitted
+  req.session = null;                                                                           //clears the cookie
+  res.redirect("/urls");                                                                        //redirects to login page, which then gives an error, dont ask me why, it's what they want in the requirements
 });
 
+/* -------------------------------------------------------------- FUNCTIONS -------------------------------------------------------------- */
+
 function generateRandomString() {
-  return uuidv4().substr(0, 6);
+  return uuidv4().substr(0, 6);                                       //uses the uuid dependency to generate a random 6 character string
 };
-function urlsForUser(id) {
+
+function urlsForUser(id) {                                            //creates a filtered version of the urlDatabase for user who's id matches the userID in the url object
   let filtered = {};
-  for (url in urlDatabase) {
-    if (urlDatabase[url].userID === id) {
-      filtered[url] = urlDatabase[url];
+  for (url in urlDatabase) {                                          //loops through the urlDatabase
+    if (urlDatabase[url].userID === id) {                             //if the userID matches the id of the user that was passed as the argument
+      filtered[url] = urlDatabase[url];                               //adds the url from urlDatabase to our filtered version
     }
   }
-  return filtered;
+  return filtered;                                                    //sends back our filtered list
 };
-function signInCheck(email, password) {
-  for (let user in users) {
-    if (users[user].email === email) {
-      if (bcrypt.compareSync(password, users[user].hashedPassword)) {
-        return users[user].id;
+
+function signInCheck(email, password) {                               //checks if the users email AND password in the user database
+  for (let user in users) {                                           //loops through each user
+    if (users[user].email === email) {                                //checks if the email exists in our database
+      if (bcrypt.compareSync(password, users[user].hashedPassword)) { //compares the input password with our hashed password using the bcrypt deendency
+        return users[user].id;                                        //if both email and hashedpassword match, then send the users id back
       }
-      return false;
+      return false;                                                   //returns false
     }
   }
-  return false;
+  return false;                                                       //returns false
 };
-function uniqueEmail(email) {
-  for (let user in users) {
-    if (users[user].email === email) {
-      return false;
+
+function uniqueEmail(email) {                                         //checks if the email exists in our database
+  for (let user in users) {                                           //loops through each user in our database
+    if (users[user].email === email) {                                //if the given email(during signup) exists in our database
+      return false;                                                   //give true (not unique)
     }
   }
-  return true;
+  return true;                                                        //give true (unique)
 };
