@@ -1,18 +1,20 @@
+<!-- header that will be run on pretty much every page -->
+
 <meta charset="UTF-8">
-<title>Tiny App</title>
+<title>Tiny App</title> <!-- lets the tab show the name of the app -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <style>
   body    {
-    text-align: center;
+    text-align: center; /* just to make it centered and easier to look at */
   }
 </style>
 <body>
-  <% if (user) { %>
+  <% if (user) { %>  <!-- if user is logged in this will let them log out faster-->
       <h2><%= user.email %></h2>
       <form action= "/logout" method="POST">
           <input type="submit" value="Log Out">
   </form>
-  <% } else { %>
+  <% } else { %> <!-- if user is NOT logged in this will let them register or log in -->
       <form action= "/login" method="GET" style="padding:10px">
           <input type="submit" value="Log In">
       </form>
