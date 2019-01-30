@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <% include partials/_headers %>
+    <% include partials/_headers %><!-- applies the html from _headers.ejs here -->
   </head>
   <body>
     <h2>URLS</h2>
     <ul>
-      <% for (url in urls) { %>
-        <%= url %> &rArr; <a href= <%= urls[url].longURL  %>><%= urls[url].longURL  %></a>
-        <form action="/urls/<%= url %>" method="get" style="padding-top:10px">
+      <% for (url in urls) { %> <!-- this function loops through and displays each url inside urls given by the templateVars object-->
+        <%= url %> &rArr; <a href= <%= urls[url].longURL  %>><%= urls[url].longURL  %></a> <!-- the link on longURL lets you visit the actual page -->
+        <form action="/urls/<%= url %>" method="get" style="padding-top:10px"> <!-- brings the user to the page for the associated URL-->
           <input type="submit" value="edit">
         </form>
-        <form method="POST"  style="padding-top:10px" action= <%= "/urls/" + url + "/delete"%>>
+        <form method="POST"  style="padding-top:10px" action= <%= "/urls/" + url + "/delete"%>> <!-- executes the app.post for delete -->
           <input type="submit" value= &#9940;>
         </form>
       <% } %>
@@ -19,7 +19,7 @@
   </body>
   <body>
     <h2>Create a New Short Link</h2>
-    <form action= "/urls/new" method="get">
+    <form action= "/urls/new" method="get"> <!-- brings the user to the new url page -->
       <input type="submit" value="NEW URL">
     </form>
   </body>
