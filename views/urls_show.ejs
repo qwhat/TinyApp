@@ -1,17 +1,18 @@
 <!DOCTYPE html>
+<!-- html for the urls/:id page at the given :id, :id would be the shortURL -->
 <html lang="en">
   <head>
-    <% include partials/_headers %>
+    <% include partials/_headers %> <!-- applies the html from _headers.ejs here -->
   </head>
   <body>
-    <h2 style="padding-top: 50px">ShortURL: <%= shortURL %></h2>
-    <form method="POST" action="/urls/<%= shortURL %>" style="padding-top: 25px">
-      <input id="longURL" name="longURL" type="text" value="<%= longURL %>" style="width: 300px" >
+    <h2 style="padding-top: 50px">ShortURL: <%= shortURL %></h2>  <!-- pulls variable shortURL from templateVars -->
+    <form method="POST" action="/urls/<%= shortURL %>" style="padding-top: 25px">  <!-- executes the app.post for urls/:id with the given shortURL -->
+      <input id="longURL" name="longURL" type="text" value="<%= longURL %>" style="width: 300px" > <!-- text area which has the longURL that the user may edit -->
       <input type="submit" value="Update">
-    </form>
+    </form>  <!-- also, this form does not change the shortURL even if the associated longURL is changed -->
   </body>
   <body>
-    <form action="/urls" method="get" style="padding-top:50px">
+    <form action="/urls" method="get" style="padding-top:50px">  <!-- just a quality of life button that directs the user to the "home" page -->
       <input type="submit" value="Home">
     </form>
   </body>
