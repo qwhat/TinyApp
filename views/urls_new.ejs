@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+<!-- html for the new url page -->
 <html lang="en">
   <head>
-    <% include partials/_headers %>
+    <% include partials/_headers %> <!-- applies the html from _headers.ejs here -->
   </head>
   <body style="font-size:20px; padding:50px;">
-    <form action="/urls" method="POST">
+    <form action="/urls" method="POST"> <!-- executes the app.post for urls -->
       <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">  <!-- text area for the URL to be shortened with a few "unecessary" stylistic choices -->
       <input type="submit" value="Submit">
     </form>
   </body>
