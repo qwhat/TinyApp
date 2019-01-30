@@ -12,8 +12,8 @@
         <form action="/urls/<%= url %>" method="get" style="padding-top:10px"> <!-- brings the user to the page for the associated URL-->
           <input type="submit" value="edit">
         </form>
-        <form method="POST"  style="padding-top:10px" action= <%= "/urls/" + url + "/delete"%>> <!-- executes the app.post for delete -->
-          <input type="submit" value= &#9940;>
+        <form method="POST" style="padding-top:10px" action="<%= "/urls/" + url + "/delete"%>"> <!-- executes the app.post for delete -->
+          <input type="submit" value= "&#9940;">
         </form>
       <% } %>
     </ul>
