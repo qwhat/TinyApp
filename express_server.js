@@ -103,11 +103,11 @@ app.get("/urls", (req, res) => {                                                
     let templateVars = {                                                                        //declares an object that pulls the information from our cookie
       users: users,
       user: users[req.session.user_id],
-      urls: urlsForUser(req.session.user_id),                                                   //assigns the result of a function to urls, see below for the associated function
+      urls: urlsForUser(req.session.user_id),                                                   //assigns the result of a function to urls, see above for the associated function
     }
     res.render("urls_index", templateVars);                                                     //displays our urls_index.ejs file and gives it access to our templateVars object
   } else {                                                                                      //gives the proper error message if the user is not logged in
-    res.status(403).send("<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>");
+    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>"); // /login must be in singlequotes or it cuts off the sent string
   }
 });
 
@@ -140,7 +140,7 @@ app.get("/urls/:id", (req, res) => {                                            
   }  else if (req.session.user_id && req.session.user_id !== urlDatabase[req.params.id].userID){//checks if the shortURL exists AND does NOT belong to the current user
     res.status(403).send("Error 403: You do not have access to this page!");                    //error message for if the shortURL does not belong to the current user
   } else if (!req.session.user_id){
-    res.status(403).send("<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>");
+    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
   } else {                                                                                      //if somehow,user does not satisfy ANY of the above conditions
     res.status(500).send("Error 500: Great, you broke it.");                                    //return appropriate error message
   }
@@ -158,7 +158,7 @@ app.get("/u/:id", (req, res) => {                                               
 app.post("/urls", (req, res) => {
   if (req.session.user_id) {
     let longURL = req.body.longURL;
-    let id = generateRandomString();                                                            //does what the name says, see function below to see exactly what it does
+    let id = generateRandomString();                                                            //does what the name says, see function above to see exactly what it does
     let userID = req.session.user_id;
     let newURL = {                                                                              //creates new user with the variables defined above
       "userID": userID,
@@ -168,7 +168,7 @@ app.post("/urls", (req, res) => {
     urlDatabase[id] = newURL;                                                                   //adds the new url to the url database
     res.redirect("/urls/" + id);                                                                //brings you to the urls_show.ejs associated to the new shortURL
   } else {
-    res.status(403).send("<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>");
+    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
   }
 });
 
@@ -179,7 +179,7 @@ app.post("/urls/:id", (req, res) => {                                           
     urlDatabase[shortURL].longURL = longURL                                                     //assigns the new edited longURL to the shortURL from the address bar
     res.redirect("/urls");                                                                      //redirects the user to the "home" page
   } else if (!req.session.user_id){                                                             //checks if not logged in
-    res.status(403).send("<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>");
+    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
   } else {                                                                                      //checks if user does NOT own the shortURL
     res.status(403).send("Error 403: You do not have access to this page!");
   }
@@ -190,7 +190,7 @@ app.post("/urls/:id/delete", (req, res) => {                                    
     delete urlDatabase[req.params.id]                                                           //deletes the shortURL object and all its keys from urlDatabase
     res.redirect("/urls");                                                                      //then "refreshes" the page
   } else if (!req.session.user_id){                                                             //checks if user is logged in
-    res.status(403).send("<html><body>you must be logged in, please <a href= "/login">log in</a></body></html>");
+    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
   } else {                                                                                      //otherwise (if the user is logged in but does not own the url)
     res.status(403).send("Error 403: You do not have access to this page!");
   }
@@ -225,7 +225,7 @@ app.get("/register", (req, res) => {                                            
 app.post("/login", (req, res) => {                                                              //executes when the form on the "/login" page is submitted
   let email = req.body.email;                                                                   //pulls email from the form
   let password = req.body.password;                                                             //pulls the password from the form
-  let loginID = signInCheck(email, password);                                                   //declares variable associated to a function defined below with 2 arguments
+  let loginID = signInCheck(email, password);                                                   //declares variable associated to a function defined above with 2 arguments
   if (loginID) {                                                                                //if variable is a user(true)
     req.session.user_id = loginID;                                                              //set the cookie for this user
     res.redirect("/urls");
@@ -237,12 +237,12 @@ app.post("/login", (req, res) => {                                              
 app.post("/register", (req, res) => {                                                           //executes when form is submitted on the "/register" page
   let email = req.body.email;                                                                   //pulls email from the form
   let password = req.body.password;                                                             //pulls password from the form
-  let ident = "user" + generateRandomString();                                                  //assigns a random "id" to the user with function defined below
+  let ident = "user" + generateRandomString();                                                  //assigns a random "id" to the user with function defined above
   let hashedPass = bcrypt.hashSync(password, 10);                                               //hashes the given password to make it harder to "hack"
   if (!password || !email ) {                                                                   //checks if one of the text areas are blank
      res.status(400);
      res.send("Empty form");
-   } else if (uniqueEmail(email) === false) {                                                   //checks if email already exists with function defined below
+   } else if (uniqueEmail(email) === false) {                                                   //checks if email already exists with function defined above
      res.status(400);
      res.send("Email in use!");
    } else {
@@ -263,8 +263,6 @@ app.post("/logout", (req, res) => {                                             
   res.redirect("/urls");                                                                        //redirects to login page, which then gives an error, dont ask me why, it's what they want in the requirements
 });
 
-
-
-app.listen(PORT, () => {                        //logs the port when the server is started
-  console.log("tinyApp listening on port ${PORT}");
+app.listen(PORT, () => {                                                                        //logs the port when the server is started
+  console.log(`tinyApp listening on port ${PORT}`);                                             //has to use back tick
 });
