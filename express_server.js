@@ -205,7 +205,7 @@ app.get("/login", (req, res) => {                                               
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
-  res.render("urls_login", templateVars);
+  res.render("login", templateVars);
   }
 });
 
@@ -218,7 +218,7 @@ app.get("/register", (req, res) => {                                            
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
-    res.render("urls_register", templateVars);
+    res.render("register", templateVars);
   }
 });
 
