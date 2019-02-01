@@ -237,7 +237,7 @@ app.post("/login", (req, res) => {                                              
 app.post("/register", (req, res) => {                                                           //executes when form is submitted on the "/register" page
   let email = req.body.email;
   let password = req.body.password;
-  let ident = "user" + generateRandomString();
+  let user_ID = "user" + generateRandomString();
   let hashedPass = bcrypt.hashSync(password, 10);                                               //hashes the given password to make it harder to "hack"
   if (!password || !email ) {
      res.status(400);
@@ -247,13 +247,13 @@ app.post("/register", (req, res) => {                                           
      res.send("Email in use!");
    } else {
      const newUser = {
-       id: ident,
+       id: user_ID,
        email: email,
        password: password,
        hashedPassword: hashedPass
      };
-     users[ident] = newUser;                                                                    //adds the new registered user to the user database
-     req.session.user_id = ident;
+     users[user_ID] = newUser;                                                                    //adds the new registered user to the user database
+     req.session.user_id = user_ID;
      res.redirect("/urls");
    }
 });
