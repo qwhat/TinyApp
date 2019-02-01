@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!-- html for the urls/:id page at the given :id, :id would be the shortURL -->
 <html lang="en">
-  <head>
+  <header>
     <% include partials/_headers %> <!-- applies the html from _headers.ejs here -->
-  </head>
+  </header>
   <body>
     <h2 style="padding-top: 50px">ShortURL: <%= shortURL %></h2>
     <form method="POST" action="/urls/<%= shortURL %>" style="padding-top: 25px">  <!-- executes the app.post for urls/:id with the given shortURL -->
