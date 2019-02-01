@@ -8,7 +8,7 @@
     <h2>URLS</h2>
     <ul>
       <% for (url in urls) { %> <!-- this function loops through and displays each url inside urls given by the templateVars object-->
-        <%= url %> &rArr; <a href= <%= urls[url].longURL  %>><%= urls[url].longURL  %></a> <!-- the link on longURL lets you visit the actual page -->
+        <%= url %> &rArr; <a href= <%= urls[url].longURL  %>><%= urls[url].longURL  %></a>
         <form action="/urls/<%= url %>" method="get" style="padding-top:10px"> <!-- brings the user to the page for the associated URL-->
           <input type="submit" value="edit">
         </form>

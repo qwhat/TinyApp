@@ -1,7 +1,7 @@
 <!-- header that will be run on pretty much every page -->
 
 <meta charset="UTF-8">
-<title>Tiny App</title> <!-- lets the tab show the name of the app -->
+<title>Tiny App</title>
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <style>
   body    {
@@ -9,12 +9,12 @@
   }
 </style>
 <body>
-  <% if (user) { %>  <!-- if user is logged in this will let them log out faster-->
+  <% if (user) { %>
       <h2><%= user.email %></h2>
       <form action= "/logout" method="POST"> <!-- executes the app.post for logout -->
           <input type="submit" value="Log Out">
   </form>
-  <% } else { %> <!-- if user is NOT logged in this will let them register or log in -->
+  <% } else { %> 
       <form action= "/login" method="GET" style="padding:10px"> <!-- brings user to the Login page -->
           <input type="submit" value="Log In">
       </form>

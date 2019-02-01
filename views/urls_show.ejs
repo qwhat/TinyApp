@@ -5,7 +5,7 @@
     <% include partials/_headers %> <!-- applies the html from _headers.ejs here -->
   </head>
   <body>
-    <h2 style="padding-top: 50px">ShortURL: <%= shortURL %></h2>  <!-- pulls variable shortURL from templateVars -->
+    <h2 style="padding-top: 50px">ShortURL: <%= shortURL %></h2>
     <form method="POST" action="/urls/<%= shortURL %>" style="padding-top: 25px">  <!-- executes the app.post for urls/:id with the given shortURL -->
       <input id="longURL" name="longURL" type="text" value="<%= longURL %>" style="width: 300px" > <!-- text area which has the longURL that the user may edit -->
       <input type="submit" value="Update">

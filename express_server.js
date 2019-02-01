@@ -1,9 +1,9 @@
-const express = require("express");             // require the express node module
+const express = require("express");
 const app = express();
-const cookieSession = require("cookie-session");// require the cookie session node module
-const bodyParser = require("body-parser");      // require the body parser node module
-const uuidv4 = require("uuid/v4");              // require the uuidv4 node module
-const bcrypt = require("bcrypt");               // require the bcrypt node module
+const cookieSession = require("cookie-session");
+const bodyParser = require("body-parser");
+const uuidv4 = require("uuid/v4");
+const bcrypt = require("bcrypt");
 
 const PORT = 3001;                              //declares port number where the app will run
 
@@ -24,30 +24,30 @@ function generateRandomString() {
 
 function urlsForUser(id) {                                            //creates a filtered version of the urlDatabase for user who's id matches the userID in the url object
   let filtered = {};
-  for (url in urlDatabase) {                                          //loops through the urlDatabase
-    if (urlDatabase[url].userID === id) {                             //if the userID matches the id of the user that was passed as the argument
-      filtered[url] = urlDatabase[url];                               //adds the url from urlDatabase to our filtered version
+  for (url in urlDatabase) {
+    if (urlDatabase[url].userID === id) {
+      filtered[url] = urlDatabase[url]
     }
   }
-  return filtered;                                                    //sends back our filtered list
+  return filtered;
 };
 
 function signInCheck(email, password) {                               //checks if the users email AND password in the user database
-  for (let user in users) {                                           //loops through each user
-    if (users[user].email === email) {                                //checks if the email exists in our database
+  for (let user in users) {
+    if (users[user].email === email) {
       if (bcrypt.compareSync(password, users[user].hashedPassword)) { //compares the input password with our hashed password using the bcrypt deendency
-        return users[user].id;                                        //if both email and hashedpassword match, then send the users id back
+        return users[user].id;
       }
-      return false;                                                   //returns false
+      return false;
     }
   }
-  return false;                                                       //returns false
+  return false;
 };
 
 function uniqueEmail(email) {                                         //checks if the email exists in our database
-  for (let user in users) {                                           //loops through each user in our database
+  for (let user in users) {
     if (users[user].email === email) {                                //if the given email(during signup) exists in our database
-      return false;                                                   //give true (not unique)
+      return false;                                                   //give false (not unique)
     }
   }
   return true;                                                        //give true (unique)
@@ -91,23 +91,23 @@ const urlDatabase = {                           //hardcoded url database
 /* -------------------------------------------------------------- CODE -------------------------------------------------------------- */
 
 app.get("/", (req, res) => {                                                                    //gets the "/" page(just a redirect)
-  if (req.session.user_id) {                                                                    //if the app detects our cookie
-    res.redirect("/urls");                                                                      //redirect the user to their url page
-  } else {                                                                                      //otherwise
-    res.redirect("/login");                                                                     //redirect them to the login page
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
   }
 });
 
 app.get("/urls", (req, res) => {                                                                //gets the urls_index.ejs "home" page
   if (req.session.user_id) {
-    let templateVars = {                                                                        //declares an object that pulls the information from our cookie
+    let templateVars = {
       users: users,
       user: users[req.session.user_id],
-      urls: urlsForUser(req.session.user_id),                                                   //assigns the result of a function to urls, see above for the associated function
+      urls: urlsForUser(req.session.user_id),
     }
-    res.render("urls_index", templateVars);                                                     //displays our urls_index.ejs file and gives it access to our templateVars object
-  } else {                                                                                      //gives the proper error message if the user is not logged in
-    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>"); // /login must be in singlequotes or it cuts off the sent string
+    res.render("urls_index", templateVars);
+  } else {
+    res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
   }
 });
 
@@ -118,7 +118,7 @@ app.get("/urls/new", (req, res) => {                                            
     urls: urlsForUser(req.session.user_id),
   };
   if (req.session.user_id) {
-    res.render("urls_new", templateVars);                                                       //displays our urls_new.ejs file and gives it access to our templateVars object
+    res.render("urls_new", templateVars);
   } else {
     res.redirect("/login");                                                                     //the project requirements want this to be the only page that redirects to login instead of giving an error message
   }
@@ -134,15 +134,15 @@ app.get("/urls/:id", (req, res) => {                                            
       longURL: urlDatabase[req.params.id].longURL,
       urls: urlsForUser(req.session.user_id),
     };
-    res.render("urls_show", templateVars);                                                      //shows the urls_show.ejs page associated to the shortURL and gives it acces to the templateVars object
+    res.render("urls_show", templateVars);
   } else if (!urlDatabase[req.params.id]){                                                      //checks if the shortURL does NOT exist in our database
-    res.status(404).send("Error 404: Page does not exist");                                     //error message for if the shortURL does not exist
+    res.status(404).send("Error 404: Page does not exist");
   }  else if (req.session.user_id && req.session.user_id !== urlDatabase[req.params.id].userID){//checks if the shortURL exists AND does NOT belong to the current user
-    res.status(403).send("Error 403: You do not have access to this page!");                    //error message for if the shortURL does not belong to the current user
+    res.status(403).send("Error 403: You do not have access to this page!");
   } else if (!req.session.user_id){
     res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
-  } else {                                                                                      //if somehow,user does not satisfy ANY of the above conditions
-    res.status(500).send("Error 500: Great, you broke it.");                                    //return appropriate error message
+  } else {
+    res.status(500).send("Error 500: Great, you broke it.");
   }
 });
 
@@ -150,7 +150,7 @@ app.get("/u/:id", (req, res) => {                                               
   if (!urlDatabase[req.params.id]) {                                                            //checks if shortURL does NOT exist in our database
     res.status(404).send("Error 404: Page does not exist");
   } else {
-    let longURL = urlDatabase[req.params.id].longURL;                                           //just declaring a variable so that the code is easier to read
+    let longURL = urlDatabase[req.params.id].longURL;
     res.redirect(longURL);                                                                      //redirects ANY user to the actual page associated to the longURL
   }
 });
@@ -158,15 +158,15 @@ app.get("/u/:id", (req, res) => {                                               
 app.post("/urls", (req, res) => {
   if (req.session.user_id) {
     let longURL = req.body.longURL;
-    let id = generateRandomString();                                                            //does what the name says, see function above to see exactly what it does
+    let id = generateRandomString();
     let userID = req.session.user_id;
-    let newURL = {                                                                              //creates new user with the variables defined above
+    let newURL = {                                                                              //creates new url with the variables defined above
       "userID": userID,
       "shortURL": id,
       "longURL": longURL,
     };
     urlDatabase[id] = newURL;                                                                   //adds the new url to the url database
-    res.redirect("/urls/" + id);                                                                //brings you to the urls_show.ejs associated to the new shortURL
+    res.redirect("/urls/" + id);
   } else {
     res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
   }
@@ -174,13 +174,13 @@ app.post("/urls", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {                                                           //edit the longURL
   if (req.session.user_id === urlDatabase[req.params.id].userID) {                              //checks if current user is associated to the shortURL
-    let longURL = req.body.longURL;                                                             //assigns a variable to the text in the textarea of the urls_show.ejs form
-    let shortURL = req.params.id;                                                               //assigns a temporary variable to the shortURL in the address bar
-    urlDatabase[shortURL].longURL = longURL                                                     //assigns the new edited longURL to the shortURL from the address bar
-    res.redirect("/urls");                                                                      //redirects the user to the "home" page
-  } else if (!req.session.user_id){                                                             //checks if not logged in
+    let longURL = req.body.longURL;
+    let shortURL = req.params.id;
+    urlDatabase[shortURL].longURL = longURL
+    res.redirect("/urls");
+  } else if (!req.session.user_id){
     res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
-  } else {                                                                                      //checks if user does NOT own the shortURL
+  } else {
     res.status(403).send("Error 403: You do not have access to this page!");
   }
 });
@@ -188,73 +188,73 @@ app.post("/urls/:id", (req, res) => {                                           
 app.post("/urls/:id/delete", (req, res) => {                                                    //delete the url and all its keys from the database
   if (req.session.user_id === urlDatabase[req.params.id].userID) {
     delete urlDatabase[req.params.id]                                                           //deletes the shortURL object and all its keys from urlDatabase
-    res.redirect("/urls");                                                                      //then "refreshes" the page
-  } else if (!req.session.user_id){                                                             //checks if user is logged in
+    res.redirect("/urls");
+  } else if (!req.session.user_id){
     res.status(403).send("<html><body>you must be logged in, please <a href= '/login'>log in</a></body></html>");
-  } else {                                                                                      //otherwise (if the user is logged in but does not own the url)
+  } else {
     res.status(403).send("Error 403: You do not have access to this page!");
   }
 });
 
 app.get("/login", (req, res) => {                                                               //gets the login page
-  if (req.session.user_id) {                                                                    //if the user is already logged in
-    res.redirect("/urls");                                                                      //bring them to the "home" page
+  if (req.session.user_id) {
+    res.redirect("/urls");
   } else {
     let templateVars = {
       users: users,
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
-  res.render("urls_login", templateVars);                                                       //display the urls_login.ejs page and let it access the templateVars object
+  res.render("urls_login", templateVars);
   }
 });
 
 app.get("/register", (req, res) => {                                                            //gets the register page
-  if (req.session.user_id) {                                                                    //if the user is already logged in
-    res.redirect("/urls");                                                                      //bring them to the "home" page
+  if (req.session.user_id) {
+    res.redirect("/urls");
   } else {
     let templateVars = {
       users: users,
       user: users[req.session.user_id],
       urls: urlsForUser(req.session.user_id),
     };
-    res.render("urls_register", templateVars);                                                  //display the urls_register.ejs page and let it access the templateVars object
+    res.render("urls_register", templateVars);
   }
 });
 
 app.post("/login", (req, res) => {                                                              //executes when the form on the "/login" page is submitted
-  let email = req.body.email;                                                                   //pulls email from the form
-  let password = req.body.password;                                                             //pulls the password from the form
+  let email = req.body.email;
+  let password = req.body.password;
   let loginID = signInCheck(email, password);                                                   //declares variable associated to a function defined above with 2 arguments
-  if (loginID) {                                                                                //if variable is a user(true)
-    req.session.user_id = loginID;                                                              //set the cookie for this user
+  if (loginID) {
+    req.session.user_id = loginID;
     res.redirect("/urls");
-  } else {                                                                                      //otherwise
-    res.status(403).send("Error 403 Email or Password do not match");                           //return appropriate error message (uses same error message for email and password so that it's harder to "hack")
+  } else {
+    res.status(403).send("Error 403 Email or Password do not match");
   }
 });
 
 app.post("/register", (req, res) => {                                                           //executes when form is submitted on the "/register" page
-  let email = req.body.email;                                                                   //pulls email from the form
-  let password = req.body.password;                                                             //pulls password from the form
-  let ident = "user" + generateRandomString();                                                  //assigns a random "id" to the user with function defined above
+  let email = req.body.email;
+  let password = req.body.password;
+  let ident = "user" + generateRandomString();
   let hashedPass = bcrypt.hashSync(password, 10);                                               //hashes the given password to make it harder to "hack"
-  if (!password || !email ) {                                                                   //checks if one of the text areas are blank
+  if (!password || !email ) {
      res.status(400);
      res.send("Empty form");
-   } else if (uniqueEmail(email) === false) {                                                   //checks if email already exists with function defined above
+   } else if (uniqueEmail(email) === false) {
      res.status(400);
      res.send("Email in use!");
    } else {
-     const newUser = {                                                                          //declares a new user object
+     const newUser = {
        id: ident,
        email: email,
        password: password,
        hashedPassword: hashedPass
      };
      users[ident] = newUser;                                                                    //adds the new registered user to the user database
-     req.session.user_id = ident;                                                               //assigns cookie for this user
-     res.redirect("/urls");                                                                     //brings user to the "home" page
+     req.session.user_id = ident;
+     res.redirect("/urls");
    }
 });
 
@@ -263,6 +263,6 @@ app.post("/logout", (req, res) => {                                             
   res.redirect("/urls");                                                                        //redirects to login page, which then gives an error, dont ask me why, it's what they want in the requirements
 });
 
-app.listen(PORT, () => {                                                                        //logs the port when the server is started
-  console.log(`tinyApp listening on port ${PORT}`);                                             //has to use back tick
+app.listen(PORT, () => {
+  console.log(`tinyApp listening on port ${PORT}`);
 });
